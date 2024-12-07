@@ -2,13 +2,13 @@ import socket
 import pyaudio
 import threading
 #마이크 입력
-RATE = 44100
-CHANNELS = 1
+RATE = 32000
+CHANNELS = 2
 FORMAT = pyaudio.paInt16
-I_DEVICE_INDEX = 1 #마이크 장치 인댁스. 동봉된 mic_info 파일로 마이크 장치확인해서 변경
-O_DEVICE_INDEX = 2 #스피커 장치 인댁스 확인
+I_DEVICE_INDEX = 0 #마이크 장치 인댁스. 동봉된 mic_info 파일로 마이크 장치확인해서 변경
+O_DEVICE_INDEX = 1 #스피커 장치 인댁스 확인
 
-CHUNK = 8192
+CHUNK = 1024
 
 pa = pyaudio.PyAudio()
 
@@ -34,7 +34,7 @@ stream1 = pa.open(rate=RATE, channels=CHANNELS, format=FORMAT, output=True,
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     print('서버시작')
-    host ='192.168.0.23'
+    host ='0.0.0.0'
     port = 8000
     s.bind((host, port))
     s.listen(1)
@@ -48,7 +48,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     t1.start()
 
     while True:
-        data.append(conn1.recv(8192))
+        data.append(conn1.recv(1024))
 
         #print(data)
         #stream1.write(data)
